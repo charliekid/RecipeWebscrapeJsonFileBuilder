@@ -4,7 +4,8 @@ recipes_small = [
 		"recipe_url" : "http://www.notquitenigella.com/2016/05/22/roasted-vegetable-salad/",
 		"title" : "Roasted Vegetable Salad @ Not Quite Nigella",
 		"tags" : "Autumnal Roasted Vegetable Salad With Golden Beetroot, Beans &amp; Paprika Rolled Feta"
-	},
+	}
+	,
 	{
 		"id" : "2",
 		"recipe_url" : "http://www.thatskinnychickcanbake.com/turtle-poke-cake/",
@@ -16,7 +17,8 @@ recipes_small = [
 		"recipe_url" : "http://tikkido.com/blog/emoji-onigiri-school-lunch-idea",
 		"title" : "Onigiri (Rice Ball) Emojis for School Lunches | Tikkido.com",
 		"tags" : "Make sushi rice onigiri (rice balls) that look like cute little emoji faces for your kids"
-	},
+	}
+	,
 	{
 		"id" : "4",
 		"recipe_url" : "http://www.wholesomelicious.com/grilled-greek-turkey-burgers-whipped-feta/",
