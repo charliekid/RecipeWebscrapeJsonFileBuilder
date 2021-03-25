@@ -23,14 +23,17 @@ def find_nth(haystack, needle, n):
         start = haystack.find(needle, start + len(needle))
         n -= 1
     return int(start)
-# # Below code does the authentication
-# # part of the code
-# gauth = GoogleAuth()
-#
-# # Creates local webserver and auto
-# # handles authentication.
-# gauth.LocalWebserverAuth()
-# drive = GoogleDrive(gauth)
+
+
+
+# Below code does the authentication
+# part of the code
+gauth = GoogleAuth()
+
+# Creates local webserver and auto
+# handles authentication.
+gauth.LocalWebserverAuth()
+drive = GoogleDrive(gauth)
 
 # replace the value of this variable
 # with the absolute path of the directory
@@ -139,6 +142,13 @@ def makeSmallerImage(imageUrl, image_title):
     source.thumbnail(size=(300, 300))
     source.save('recipe_photos/'+ image_title +'.png')
 
+    # upload photo to gdrive specified folder
+    f = drive.CreateFile({'title': image_title, 'parents': [{'id': recipe_photo_gFolder_ID}]})
+    f.SetContentFile(os.path.join(path, image_title + '.png'))
+    f.Upload()
+
+    file_list = drive.ListFile(
+        {'q': "'{}' in parents and trashed=false".format('1QlhjF80adCI8OUibS84VkH9Fxdlu9Ovn')}).GetList()
 
     # w, h = (source.width // 2 + 1), (source.height // 2)
     #
@@ -186,15 +196,23 @@ def makeSmallerImage(imageUrl, image_title):
 
 # count_tags = count_tags_in_soup(website_soup_head)
 
-for recipe in recipes_small:
-    image_title = recipe['id']
-    current_url = recipe['recipe_url']
-    # print(current_url)
-    print(getImageURL(current_url))
-    imageUrl = getImageURL(current_url)
-    makeSmallerImage(imageUrl, image_title)
-
-
+# for recipe in recipes_small:
+#     image_title = recipe['id']
+#     current_url = recipe['recipe_url']
+#     # print(current_url)
+#     print(getImageURL(current_url))
+#     imageUrl = getImageURL(current_url)
+#     makeSmallerImage(imageUrl, image_title)
+def getGDriveFileId(title):
+    file_list = drive.ListFile({'q': "'{}' in parents and trashed=false".format('1QlhjF80adCI8OUibS84VkH9Fxdlu9Ovn')}).GetList()
+    file_id = ""
+    for file in file_list:
+        # print('title: %s, id: %s' % (file['title'], file['id']))
+        if file['title'] == '0':
+            # print("found 0: " + file['id'])
+            file_id = file['id']
+            return file_id
+print(getGDriveFileId('0'))
 # makeSmallerImage(path, 'title')
 # makeSmallerImage('https://images.notquitenigella.com/images/autumn-roasted-salad/ll.jpg', 'title')
 # req = Request('https://tikkido.com/sites/default/files/onigiri-emoji-HERO.jpg', headers={'User-Agent': 'Mozilla/5.0'})
@@ -213,84 +231,7 @@ for recipe in recipes_small:
 # img = PIL.Image.open(image_bytes)
 #
 # img.show()
-# makeSmallerImageFromSmallerImage(path)
-# count_num_of_tag_element = 0;
-# for tag in website_soup_head:
-#     tag_type = str(type(tag))
-#     tag_index = find_nth(tag_type, "bs4.element.Tag", 1)
-#     # print(tag_index)
-#
-#     # Checks to see if the tag is in the code
-#     if tag_index >= 0:
-#         # print(str(count_num_of_tag_element) + " : ")
-#         # count_num_of_tag_element = count_num_of_tag_element + 1
-#         # print(type(tag))
-#         # print(tag)
-#         meta_soup = tag.find_all('meta')
-#         meta_index = find_nth(str(meta_soup), "meta", 1)
-#         # print("meta index: " + str(meta_index))
-#
-#         if count_tags > 14:
-#             # print(type(tag))
-#             # print(tag.attrs)
-#             image_content_index = find_nth(str(tag.attrs), "og:image", 1)
-#             # twitter_content_index = find_nth(str(meta_content.attrs), "twitter:image", 1)
-#             # image_content_index = find_nth(str(meta_content.attrs), "og:image")
-#             if image_content_index >= 0 and (len(tag.attrs['content']) > 7):
-#                 print(tag.attrs['content'])
-#
-#                 image_not_found = 0
-#             # Checks to see which tag has the meta tag
-#             # for meta_tag in meta_soup:
-#         else:
-#             if meta_index >= 0:
-#                 # print(str(count_num_of_tag_element-1) + " : ")
-#                 # print(tag)
-#                 # print("meta soup lenth : " + str(len(meta_soup)))
-#                 # print("[metasoup]" + str(meta_soup))
-#                 image_not_found = 1
-#                 for meta_tag in meta_soup:
-#                     # print("[meta tag]" + str(meta_tag))
-#                     # print(type(meta_tag))
-#                     # print(meta_tag)
-#                 # if meta_index >= 0:
-#                     # Checks to see if the meta has content
-#                     if bool(image_not_found):
-#                         if len(meta_tag) > 1:
-#                             meta_tag_content = meta_tag.find_all('meta')
-#                             meta_tag_content_index = find_nth(str(meta_tag_content), "meta", 1)
-#
-#                             if meta_tag_content_index >= 0:
-#                                 # print(len(meta_tag_content))
-#
-#                                 for meta_content in meta_tag_content:
-#                                     # print(type(meta_content))
-#
-#                                     tag_index = find_nth(str(type(meta_content)), "bs4.element.Tag", 1)
-#                                     if tag_index >= 0:
-#                                         # for content in meta_content:
-#                                         # print(type(meta_content))
-#                                         # print(meta_content)
-#
-#
-#                                         image_content_index = find_nth(str(meta_content.attrs), "og:image", 1)
-#                                         # twitter_content_index = find_nth(str(meta_content.attrs), "twitter:image", 1)
-#                                         #image_content_index = find_nth(str(meta_content.attrs), "og:image")
-#                                         if image_content_index >=0 and (len(meta_content.attrs['content']) > 7):
-#                                             print(meta_content.attrs['content'])
-#
-#                                             image_not_found = 0
 
-                                        # print(content_index)
-                                    # if content_index >= 0:
-                                    #     print(content.attrs)
-
-                    # print("[" + str(meta_tag) + "]" + str(len(meta_tag)))
-        # if image_index >= 0:
-        #     print("tweet img found: " + str(image_index))
-        #     print(tag.attrs)
-        #     print(tag)
-        # print("I'm a tag")
 
 
 
